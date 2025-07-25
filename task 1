@@ -1,0 +1,95 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# 🌟 Intro Banner
+print("----------------------------------------------------")
+print("🎯 Movie Genre Classification App")
+print("👨‍💻 Intern: Rishan . N")
+print("🏫 Rajalakshmi Institute of Technology")
+print("🏢 Internship Company: CodSoft")
+print("----------------------------------------------------\n")
+
+# ✅ Dataset (20 plots)
+data = {
+    'plot': [
+        "A man discovers a time machine and travels to the future.",
+        "Two friends go on a hilarious road trip through the desert.",
+        "A woman fights for justice in her corrupt village.",
+        "Aliens invade Earth and a team of scientists must stop them.",
+        "A stand-up comedian rises to fame against all odds.",
+        "A detective solves mysterious murders in a haunted town.",
+        "A high school student invents a flying car in his garage.",
+        "A soldier returns from war and struggles with PTSD.",
+        "A royal princess falls in love with a poor painter.",
+        "A group of kids battle supernatural forces in their town.",
+        "A teacher inspires students in a poor neighborhood.",
+        "A boy finds a magical sword that gives him powers.",
+        "A lonely chef finds happiness through cooking.",
+        "A warrior goes on a quest to defeat a dark lord.",
+        "A robot gains emotions and wants to be human.",
+        "A scientist builds a portal to another world.",
+        "A girl dreams of becoming a famous musician.",
+        "A cop uncovers a big political conspiracy.",
+        "A woman discovers she has magical powers.",
+        "A young couple finds love during a train journey."
+    ],
+    'genre': [
+        "Sci-Fi", "Comedy", "Drama", "Sci-Fi", "Comedy",
+        "Thriller", "Sci-Fi", "Drama", "Romance", "Thriller",
+        "Drama", "Fantasy", "Comedy", "Fantasy", "Sci-Fi",
+        "Sci-Fi", "Drama", "Thriller", "Fantasy", "Romance"
+    ]
+}
+
+# Load dataset
+df = pd.DataFrame(data)
+X = df['plot']
+y = df['genre']
+
+# 📊 Genre Distribution Pie Chart (No emoji in title)
+genre_counts = df['genre'].value_counts()
+colors = ['gold', 'skyblue', 'lightcoral', 'mediumseagreen', 'violet', 'orange']
+plt.figure(figsize=(6, 6))
+plt.pie(genre_counts, labels=genre_counts.index, colors=colors,
+        autopct='%1.1f%%', startangle=140, shadow=True)
+plt.title("Genre Distribution in Dataset", fontsize=14, fontweight='bold')  # No emoji here
+plt.tight_layout()
+plt.show()
+
+# ✂️ Train-test split (no error)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, stratify=y, random_state=42
+)
+
+# 🔠 TF-IDF Vectorization
+vectorizer = TfidfVectorizer(stop_words='english', max_features=500)
+X_train_vec = vectorizer.fit_transform(X_train)
+X_test_vec = vectorizer.transform(X_test)
+
+# 🤖 Train Model
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train_vec, y_train)
+
+# 🎯 Predictions and Accuracy
+y_pred = model.predict(X_test_vec)
+print("📌 Actual Labels:   ", list(y_test))
+print("📌 Predicted Labels:", list(y_pred))
+
+accuracy = accuracy_score(y_test, y_pred)
+print("\n✅ Model Accuracy:", round(accuracy * 100, 2), "%\n")
+
+# 🧪 Test with user input
+print("🔎 Test It Yourself!")
+user_plot = input("📥 Enter a movie plot to predict its genre:\n> ")
+user_vec = vectorizer.transform([user_plot])
+predicted_genre = model.predict(user_vec)
+
+print("\n🎬 Predicted Genre:", predicted_genre[0])
+print("\n✅ Task Completed Successfully!")
+print("👨‍💻 Submitted by: Rishan . N")
+print("🏫 College: Rajalakshmi Institute of Technology")
+print("🏢 Internship at: CodSoft"
